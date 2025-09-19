@@ -11,8 +11,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   final List<ChatUser> _users = [
     ChatUser(
-      id: 'user1',
-      name: 'John Doe',
+      id: '2280613658',
+      name: 'Phạm Trần Minh Quang',
       lastMessage: 'Xin chào! Bạn có khỏe không?',
       lastMessageTime: DateTime.now().subtract(const Duration(minutes: 5)),
       avatar: 'https://i.pravatar.cc/150?img=1',
@@ -20,8 +20,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       unreadCount: 2,
     ),
     ChatUser(
-      id: 'user2',
-      name: 'Alice Smith',
+      id: '2280613000',
+      name: 'Thân',
       lastMessage: 'Hôm nay thời tiết đẹp quá!',
       lastMessageTime: DateTime.now().subtract(const Duration(hours: 1)),
       avatar: 'https://i.pravatar.cc/150?img=2',
@@ -29,8 +29,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       unreadCount: 0,
     ),
     ChatUser(
-      id: 'user3',
-      name: 'Bob Johnson',
+      id: '2280613001',
+      name: 'Thiện',
       lastMessage: 'Cảm ơn bạn đã giúp đỡ!',
       lastMessageTime: DateTime.now().subtract(const Duration(hours: 3)),
       avatar: 'https://i.pravatar.cc/150?img=3',
@@ -38,8 +38,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       unreadCount: 1,
     ),
     ChatUser(
-      id: 'user4',
-      name: 'Emma Wilson',
+      id: '2280613002',
+      name: 'Hải',
       lastMessage: 'Tôi sẽ gửi file cho bạn sau',
       lastMessageTime: DateTime.now().subtract(const Duration(days: 1)),
       avatar: 'https://i.pravatar.cc/150?img=4',
@@ -47,7 +47,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       unreadCount: 0,
     ),
     ChatUser(
-      id: 'user5',
+      id: '2280613003',
       name: 'Mike Brown',
       lastMessage: 'Cuộc họp lúc 2h chiều nhé',
       lastMessageTime: DateTime.now().subtract(const Duration(days: 2)),
