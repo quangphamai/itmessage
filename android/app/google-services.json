@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "789094140356",
+    "project_id": "ithutechmessage",
+    "storage_bucket": "ithutechmessage.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789094140356:android:3ebbcb69ece67971323c91",
+        "android_client_info": {
+          "package_name": "com.example.itmessage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9sjk9K4puGle2nI_Ekx8-UANdp18zBS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

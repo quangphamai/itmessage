@@ -157,7 +157,7 @@ class ChatScreenState extends State<ChatScreen> {
         }
       }
     } catch (e) {
-      if (context.mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Lỗi khi chọn file: $e'),
@@ -185,24 +185,21 @@ class ChatScreenState extends State<ChatScreen> {
         chatController: _chatController,
         currentUserId: 'user1',
         builders: Builders(
-          fileMessageBuilder:
-                  (
-                    context,
-                    message,
-                    index, {
-                    required bool isSentByMe,
-                    MessageGroupStatus? groupStatus,
-                  }) => FlyerChatFileMessage(message: message, index: index),
-        imageMessageBuilder:
-                (
-                  context,
-                  message,
-                  index, {
-                  required bool isSentByMe,
-                  MessageGroupStatus? groupStatus,
-                }) => FlyerChatImageMessage(message: message, index: index),
-          
-          ),
+          fileMessageBuilder: (
+            context,
+            message,
+            index, {
+            required bool isSentByMe,
+            MessageGroupStatus? groupStatus,
+          }) => FlyerChatFileMessage(message: message, index: index),
+          imageMessageBuilder: (
+            context,
+            message,
+            index, {
+            required bool isSentByMe,
+            MessageGroupStatus? groupStatus,
+          }) => FlyerChatImageMessage(message: message, index: index),
+        ),
           onMessageSend: (text) {
             _chatController.insertMessage(
             TextMessage(

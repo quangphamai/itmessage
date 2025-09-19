@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'chat_screen.dart';
+import 'firebase_test_simple.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -64,6 +65,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: const Text('IT Message'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.cloud),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FirebaseTestSimple(),
+                ),
+              );
+            },
+            tooltip: 'Test Firebase',
+          ),
           IconButton(
             icon: const Icon(Icons.search),
             onPressed: () {
