@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'views/dashboard_screen.dart';
-
+import 'services/firebase_options.dart';
+import 'views/chat/dashboard_screen.dart';
+import 'views/authentication/login_screen.dart';
+import 'views/authentication/signin_screen.dart';
+import 'views/chat/chat_screen.dart';
+import 'views/test/firebase_test_simple.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -23,7 +26,14 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: const DashboardScreen(),
+      initialRoute: '/signin',
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/signin': (context) => const SigninScreen(),
+        '/dashboard': (context) => const DashboardScreen(),
+        '/chat': (context) => const ChatScreen(chatUserId: ''),
+        '/firebase_test_simple': (context) => const FirebaseTestSimple(),
+      },
     );
   }
 }

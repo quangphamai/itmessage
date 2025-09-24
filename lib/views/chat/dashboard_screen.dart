@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'chat_screen.dart';
-import 'firebase_test_simple.dart';
+import '../test/firebase_test_simple.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
