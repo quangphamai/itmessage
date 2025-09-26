@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 // import 'chat_screen.dart';
-import 'Chat_Screen_1.dart';
+import 'package:itmessage/views/chat/chat_screen.dart';
 
-import 'to_do_test.dart';
-import 'firebase_test_simple.dart';
+import 'package:itmessage/views/to_do_test.dart';
+
+import 'package:itmessage/views/test/firebase_test_simple.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

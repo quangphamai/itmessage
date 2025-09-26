@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'services/firebase_options.dart';
-import 'views/chat/dashboard_screen_1.dart';
+import 'views/chat/dashboard_screen.dart';
+
+// import 'views/chat/dashboard_screen_1.dart';
 import 'views/authentication/login_screen.dart';
 import 'views/authentication/signin_screen.dart';
 import 'views/chat/chat_screen.dart';
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'IT Message',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-      initialRoute: '/signin',
+      initialRoute: '/dashboard',
       routes: {
         '/login': (context) => const LoginScreen(),
         '/signin': (context) => const SigninScreen(),

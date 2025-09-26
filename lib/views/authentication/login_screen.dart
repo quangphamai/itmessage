@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../chat/dashboard_screen_1.dart';
+import 'package:itmessage/views/chat/dashboard_screen.dart';
 import 'signin_screen.dart';
 
 class LoginScreen extends StatefulWidget {
