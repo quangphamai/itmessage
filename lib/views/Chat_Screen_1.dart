@@ -1,18 +1,16 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:flyer_chat_image_message/flyer_chat_image_message.dart';
 import 'package:flyer_chat_file_message/flyer_chat_file_message.dart';
-
+import 'package:flyer_chat_image_message/flyer_chat_image_message.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:itmessage/controllers/ChatControllerFirestore.dart';
 
 class ChatScreen extends StatefulWidget {
   final String chatUserId;
-
   const ChatScreen({super.key, required this.chatUserId});
 
   @override
@@ -21,49 +19,86 @@ class ChatScreen extends StatefulWidget {
 
 class ChatScreenState extends State<ChatScreen> {
   final _chatController = InMemoryChatController();
+  late ChatControllerFirestore _firestoreController;
 
-  final CollectionReference todos = FirebaseFirestore.instance.collection(
-    'Chatrooms',
-  );
-
-  @override
-  void dispose() {
-    _chatController.dispose();
-    super.dispose();
-  }
+  String _currentUserId = 'user1';
 
   @override
   void initState() {
     super.initState();
+    _firestoreController = ChatControllerFirestore("default_room");
 
-    FirebaseFirestore.instance
-        .collection('Chatrooms/default_room/messages')
-        .orderBy('createdAt', descending: false)
-        .snapshots()
-        .listen((snapshot) {
-          final messages = snapshot.docs.map((doc) {
-            final data = doc.data();
-            return TextMessage(
-              id: doc.id,
-              authorId: data['authorId'],
-              createdAt:
-                  (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-              text: data['text'] ?? '',
-            );
-          }).toList();
+    _firestoreController.messagesStream().listen((messages) {
+      // map ChatMessage -> TextMessage của flyer_chat
+      final flyerMessages = messages.map((m) {
+        return TextMessage(
+          id: m.id,
+          authorId: m.authorId,
+          createdAt: m.createdAt,
+          text: m.text,
+        );
+      }).toList();
 
-          _chatController.setMessages(messages, animated: false);
-        });
+      _chatController.setMessages(flyerMessages, animated: false);
+    });
   }
 
-  final ImagePicker _picker = ImagePicker();
-
-  String _currentUserId = 'user1';
   void _switchUser() {
     setState(() {
       _currentUserId = _currentUserId == 'user1' ? 'user2' : 'user1';
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Chat with ${widget.chatUserId}"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.switch_account),
+            onPressed: _switchUser,
+            tooltip: "Đổi user",
+          ),
+        ],
+      ),
+      body: Chat(
+        chatController: _chatController,
+        currentUserId: _currentUserId,
+        builders: Builders(
+          fileMessageBuilder:
+              (
+                context,
+                message,
+                index, {
+                required bool isSentByMe,
+                MessageGroupStatus? groupStatus,
+              }) => FlyerChatFileMessage(message: message, index: index),
+          imageMessageBuilder:
+              (
+                context,
+                message,
+                index, {
+                required bool isSentByMe,
+                MessageGroupStatus? groupStatus,
+              }) => FlyerChatImageMessage(message: message, index: index),
+        ),
+        onMessageSend: (text) {
+          _firestoreController.sendMessage(_currentUserId, text);
+        },
+        resolveUser: (UserID id) async {
+          if (id == 'user1') {
+            return User(id: id, name: 'John Doe');
+          } else if (id == 'user2') {
+            return User(id: id, name: 'Alice');
+          }
+          return User(id: id, name: 'Unknown');
+        },
+      ),
+    );
+  }
+
+  final ImagePicker _picker = ImagePicker();
 
   Future<void> onAttachmentTap(
     ChatController chatController,
@@ -209,111 +244,5 @@ class ChatScreenState extends State<ChatScreen> {
         );
       }
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Chat with ${widget.chatUserId}"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.switch_account),
-            onPressed: _switchUser,
-            tooltip: "Đổi user",
-          ),
-        ],
-      ),
-      body: Chat(
-        chatController: _chatController,
-        currentUserId: 'user1',
-        builders: Builders(
-          fileMessageBuilder:
-              (
-                context,
-                message,
-                index, {
-                required bool isSentByMe,
-                MessageGroupStatus? groupStatus,
-              }) => FlyerChatFileMessage(message: message, index: index),
-          imageMessageBuilder:
-              (
-                context,
-                message,
-                index, {
-                required bool isSentByMe,
-                MessageGroupStatus? groupStatus,
-              }) => FlyerChatImageMessage(message: message, index: index),
-        ),
-
-        onMessageSend: (text) async {
-          final newMessage = {
-            'id': '${Random().nextInt(1000) + 1}',
-            'authorId': _currentUserId,
-            'text': text,
-            'type': 'text',
-            'createdAt': FieldValue.serverTimestamp(),
-          };
-
-          //Send to firestore
-          await FirebaseFirestore.instance
-              .collection('Chatrooms/default_room/messages')
-              .add(newMessage);
-        },
-
-        // onMessageSend: (text) {
-        //   _chatController.insertMessage(
-        //     TextMessage(
-        //       // Better to use UUID or similar for the ID - IDs must be unique
-        //       id: '${Random().nextInt(1000) + 1}',
-        //       authorId: _currentUserId,
-        //       createdAt: DateTime.now().toUtc(),
-        //       text: text,
-        //     ),
-        //   );
-        resolveUser: (UserID id) async {
-          if (id == 'user1') {
-            return User(id: id, name: 'John Doe');
-          } else if (id == 'user2') {
-            return User(id: id, name: 'Alice');
-          }
-          return User(id: id, name: 'Unknown');
-        },
-        onAttachmentTap: () => onAttachmentTap(_chatController, context),
-
-        ///handle attachments
-      ),
-    );
-  }
-
-  // utils
-  void _logAllMessages() {
-    final list = _chatController.messages;
-    debugPrint(
-      '===== InMemoryChatController DUMP (count=${list.length}) =====',
-    );
-
-    for (var i = 0; i < list.length; i++) {
-      final m = list[i];
-      final type = m.runtimeType.toString();
-      // Tùy message type mà lấy thêm field “đặc trưng”
-      String extra = '';
-      if (m is TextMessage) {
-        extra = 'text="${m.text}"';
-      } else if (m is ImageMessage) {
-        extra = 'imageSource="${m.source}"';
-      } else if (m is FileMessage) {
-        extra = 'fileName="${m.name}", size=${m.size}, source="${m.source}"';
-      }
-      final created = m.createdAt;
-
-      debugPrint(
-        '#$i '
-        'type=$type | id=${m.id} | author=${m.authorId} | createdAt=$created'
-        '${extra.isEmpty ? '' : ' | $extra'}',
-      );
-    }
-
-    debugPrint('===== END DUMP =====');
   }
 }

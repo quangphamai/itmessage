@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'chat_screen.dart';
+// import 'chat_screen.dart';
+import 'Chat_Screen_1.dart';
+
+import 'to_do_test.dart';
 import 'firebase_test_simple.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -84,9 +87,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.notes),
             onPressed: () {
-              // TODO: Implement menu
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const TodoScreen()),
+              );
             },
           ),
         ],
@@ -204,10 +210,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return ListTile(
       leading: Stack(
         children: [
-          CircleAvatar(
-            radius: 25,
-            backgroundImage: NetworkImage(user.avatar),
-          ),
+          CircleAvatar(radius: 25, backgroundImage: NetworkImage(user.avatar)),
           if (user.isOnline)
             Positioned(
               bottom: 0,
@@ -227,14 +230,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       title: Text(
         user.name,
         style: TextStyle(
-          fontWeight: user.unreadCount > 0 ? FontWeight.bold : FontWeight.normal,
+          fontWeight: user.unreadCount > 0
+              ? FontWeight.bold
+              : FontWeight.normal,
         ),
       ),
       subtitle: Text(
         user.lastMessage,
         style: TextStyle(
           color: user.unreadCount > 0 ? Colors.black87 : Colors.grey[600],
-          fontWeight: user.unreadCount > 0 ? FontWeight.w500 : FontWeight.normal,
+          fontWeight: user.unreadCount > 0
+              ? FontWeight.w500
+              : FontWeight.normal,
         ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
@@ -248,7 +255,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             style: TextStyle(
               color: user.unreadCount > 0 ? Colors.blue : Colors.grey[600],
               fontSize: 12,
-              fontWeight: user.unreadCount > 0 ? FontWeight.bold : FontWeight.normal,
+              fontWeight: user.unreadCount > 0
+                  ? FontWeight.bold
+                  : FontWeight.normal,
             ),
           ),
           if (user.unreadCount > 0) ...[
